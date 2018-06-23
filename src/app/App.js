@@ -1,6 +1,7 @@
 import React from 'react';
 import {Route, Router} from 'react-router';
 import {ROUTES} from './routesConstants';
+import './../pages/style.scss';
 
 // Pages
 import Home from './../pages/Home';

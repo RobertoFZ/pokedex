@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+
+$logo_container_color: #343030;
+$menu_container_color: #565252;
+
+.side_menu {
+  font-family: 'Lato', sans-serif;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: $menu_container_color;
+  overflow-x: scroll;
+}
+
+.side_menu a {
+  padding: 25px 39px;
+  color: #fff;
+  display: block;
+}
+
+.side_menu a:hover {
+  color: #f1f1f1;
+}
+
+.side_menu__app_logo {
+  background-color: $logo_container_color;
+}
+
+.side_menu__app_logo a {
+  font-size: 36px;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+}
+
+.side_menu__app_logo a img {
+  vertical-align: middle;
+  padding-right: 30px;
+}
