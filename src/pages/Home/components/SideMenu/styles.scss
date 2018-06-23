@@ -2,26 +2,59 @@
 
 $logo_container_color: #343030;
 $menu_container_color: #565252;
+$menu_logo_text_color: #ffffff;
+$menu_element_primary_color: #ffffff;
+$menu_element_secondary_color: #797979;
+$menu_element_selected_color: #3F3939;
+
+.element {
+  color: $menu_element_primary_color;
+  padding: 10px 30px;
+}
+
+.element:hover {
+  color: $menu_element_primary_color;
+  background-color: $menu_element_selected_color;
+}
+
+.element.selected {
+  color: $menu_element_selected_color;
+}
+
+.element__id, .element__name {
+  display: inline-block;
+}
+
+.element__id {
+  min-width: 30px;
+  text-align: right;
+  color: $menu_element_secondary_color;
+}
+
+.element__name {
+  text-align: left;
+  padding-left: 20px;
+  color: #FFFFFF;
+}
 
 .side_menu {
-  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
   height: 100%;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
   background-color: $menu_container_color;
+}
+
+.side_menu_elements {
+  max-height: 100%;
   overflow-x: scroll;
 }
 
-.side_menu a {
-  padding: 25px 39px;
-  color: #fff;
+.side_menu_elements a, .side_menu__app_logo a {
   display: block;
-}
-
-.side_menu a:hover {
-  color: #f1f1f1;
 }
 
 .side_menu__app_logo {
@@ -29,11 +62,12 @@ $menu_container_color: #565252;
 }
 
 .side_menu__app_logo a {
+  padding: 25px 39px;
   font-size: 36px;
   text-transform: uppercase;
   text-decoration: none;
-  font-family: 'Lato', sans-serif;
   font-weight: 300;
+  color: $menu_logo_text_color;
 }
 
 .side_menu__app_logo a img {
