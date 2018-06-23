@@ -4,8 +4,8 @@ import {ROUTES} from './routesConstants';
 import './../pages/style.scss';
 
 // Pages
-import Home from './../pages/Home';
-import PokemonDetail from './../pages/PokemonDetail';
+import Home from '../pages/Home/Home';
+import PokemonDetail from '../pages/PokemonDetail/PokemonDetail';
 
 class App extends React.Component {
 
