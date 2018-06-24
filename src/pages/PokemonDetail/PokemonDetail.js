@@ -56,7 +56,7 @@ class PokemonDetail extends Component {
                 <PokemonInfo data={currentPokemon.data}/>
               </div>
               <div className={'column'}>
-                <p>Otro detalle</p>
+                <p>Some details</p>
               </div>
             </div>
           </div>
