@@ -45,7 +45,6 @@ class PokemonDetail extends Component {
 
   render() {
     const {currentPokemon, detailError, fetchingPokemon, fetchingPokemonList} = this.props;
-    console.log(currentPokemon);
     return (
       <div className={'detail__content'}>
         {

@@ -7,8 +7,6 @@ export const ACTION_TYPES = {
   FETCH_POKEMON_ERROR: 'FETCH_POKEMON',
   LOAD_POKEMONS_LIST: 'LOAD_POKEMONS_LIST',
   SELECT_POKEMON: 'SELECT_POKEMON',
-  UPDATE_POKEMON_DATA: 'UPDATE_POKEMON_DATA',
-  UPDATING_POKEMONS_LIST: 'UPDATING_POKEMONS_LIST',
 };
 
 let fetchPokemonsPromise;
@@ -27,16 +25,18 @@ export function fetchPokemons(pokemonId) {
       offset: next ? getOffsetFromUrl(next) : null,
     };
     dispatch(fetchingPokemonList(true));
-    dispatch(fetchError(false, null));
+    dispatch(fetchPokemonListError(false));
     fetchPokemonsPromise = PokemonsResource.listPokemons(params).then(response => {
       const {next, previous, results} = response;
       dispatch(updatePokemonsLis(next, previous, results));
       dispatch(fetchingPokemonList(false));
-      if(pokemonId) dispatch(canSelectPokemon(pokemonId));
+      if(typeof pokemonId !== 'undefined') dispatch(canSelectPokemon(pokemonId));
     }).catch(error => {
       console.log('Error in fetch pokemons');
-      dispatch(fetchError(true, null));
+      dispatch(fetchingPokemonList(false));
+      dispatch(fetchPokemonListError(true));
     });
+    return fetchPokemonsPromise;
   };
 }
 
@@ -48,7 +48,7 @@ export function fetchPokemons(pokemonId) {
 export function canSelectPokemon(pokemonId) {
   return function (dispatch, getState) {
     dispatch(fetchingPokemon(true));
-    dispatch(dispatch(fetchError(null, false)));
+    dispatch(dispatch(fetchPokemonError(false)));
     if (getState().pokemons.fetchingPokemonList) {
       fetchPokemonsPromise.then(() => selectPokemon(dispatch, getState, pokemonId));
     } else {
@@ -78,7 +78,8 @@ function selectPokemon(dispatch, getState, pokemonId) {
         dispatch(fetchingPokemon(false));
       }).catch(error => {
         console.log('Error in fetch pokemon');
-        dispatch(fetchError(null, true));
+        dispatch(fetchingPokemon(false));
+        dispatch(fetchPokemonError(true));
       });
     }
   }else{
@@ -89,13 +90,24 @@ function selectPokemon(dispatch, getState, pokemonId) {
 /**
  *
  * @param pokemonListError
+ * @returns {{type: string, error: *}}
+ */
+function fetchPokemonListError(pokemonListError) {
+  return {
+    type: ACTION_TYPES.FETCH_POKEMON_LIST_ERROR,
+    error: pokemonListError,
+  };
+}
+
+/**
+ *
  * @param pokemonDetailError
  * @returns {{type: string, error: *}}
  */
-function fetchError(pokemonListError, pokemonDetailError) {
+function fetchPokemonError(pokemonDetailError) {
   return {
-    type: pokemonListError ? ACTION_TYPES.FETCH_POKEMON_LIST_ERROR : ACTION_TYPES.FETCH_POKEMON_ERROR,
-    error: pokemonListError ? pokemonListError : pokemonDetailError,
+    type: ACTION_TYPES.FETCH_POKEMON_ERROR,
+    error: pokemonDetailError,
   };
 }
 
