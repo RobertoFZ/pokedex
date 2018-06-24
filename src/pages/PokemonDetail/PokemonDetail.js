@@ -1,23 +1,24 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Loader from '../components/Loader/Loader';
-import {selectPokemon} from '../../actions/pokemonsActions';
+import {canSelectPokemon} from '../../actions/pokemonsActions';
 import PokemonInfo from './PokemonInfo/PokemonInfo';
 import './styles.scss';
 
 function mapStateToProps(state, props) {
-  const {currentPokemon, fetchingPokemon, list} = state.pokemons;
+  const {currentPokemon, fetchingPokemon, fetchingPokemonList, list} = state.pokemons;
   return {
     pokemonsList: list,
     fetchingPokemon,
     currentPokemon: currentPokemon ? currentPokemon.data && currentPokemon : null,
+    fetchingPokemonList,
   };
 }
 
 function mapDispatchToProps(dispatch, props) {
   return {
     selectCurrentPokemon: (pokemonId) => {
-      dispatch(selectPokemon(pokemonId));
+      dispatch(canSelectPokemon(pokemonId));
     }
   };
 }
@@ -30,12 +31,17 @@ class PokemonDetail extends Component {
     this.props.selectCurrentPokemon(pokemonId);
   }
 
+  shouldComponentUpdate(nextProps, nextState){
+    console.log(nextProps, nextState);
+    return true;
+  }
+
   render() {
-    const {currentPokemon, fetchingPokemon} = this.props;
+    const {currentPokemon, fetchingPokemon, fetchingPokemonList} = this.props;
     return (
       <div className={'detail__content'}>
         {
-          fetchingPokemon ? <Loader/> : currentPokemon && <div>
+          fetchingPokemon || fetchingPokemonList ? <Loader/> : currentPokemon && <div>
             <div className={'row'}>
               <div className={'column'}>
                 <PokemonInfo data={currentPokemon.data}/>

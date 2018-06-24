@@ -4,7 +4,7 @@ import SideMenu from './components/SideMenu/SideMenu';
 import constants from './constants';
 import './styles.scss';
 import VerticalAlignContent from '../components/VeticalAlignContent/VerticalAlignContent';
-import {selectPokemon} from '../../actions/pokemonsActions';
+import {canSelectPokemon} from '../../actions/pokemonsActions';
 
 function mapStateToProps(state, props) {
   const {fetchingPokemonList, list} = state.pokemons;
@@ -17,7 +17,7 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch, props) {
   return {
     selectPokemon: (pokemonId) => {
-      dispatch(selectPokemon(pokemonId));
+      dispatch(canSelectPokemon(pokemonId));
     }
   };
 }

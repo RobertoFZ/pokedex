@@ -8,6 +8,8 @@ export const ACTION_TYPES = {
   UPDATE_POKEMON_DATA: 'UPDATE_POKEMON_DATA',
 };
 
+let fetchPokemonsPromise;
+
 /**
  * Action for Get Pokemons List from API
  * @returns {Function}
@@ -19,7 +21,7 @@ export function fetchPokemons() {
       limit: state.pokemons.pagination.elements,
     };
     dispatch(fetchingPokemonList(true));
-    PokemonsResource.listPokemons(params).then(response => {
+    fetchPokemonsPromise = PokemonsResource.listPokemons(params).then(response => {
       const {next, previous, results} = response;
       dispatch(updatePokemonsLis(next, previous, results));
       dispatch(fetchingPokemonList(false));
@@ -30,31 +32,45 @@ export function fetchPokemons() {
 }
 
 /**
- * Action for select an current pokemon
+ * Action for check if the user can select a Pokemon
  * @param pokemonId
  * @returns {Function}
  */
-export function selectPokemon(pokemonId) {
+export function canSelectPokemon(pokemonId) {
   return function (dispatch, getState) {
-    const state = getState();
-    const {list} = state.pokemons;
-    const pokemon = list.get(Number(pokemonId));
-    if (pokemon) {
-      if (pokemon.data) {
-        dispatch(changeCurrentPokemon(pokemon));
-      } else {
-        dispatch(fetchingPokemon(true));
-
-        PokemonsResource.getPokemonData(pokemonId).then(response => {
-          pokemon.data = response;
-          dispatch(changeCurrentPokemon(pokemon));
-          dispatch(fetchingPokemon(false));
-        }).catch(error => {
-          console.log('Error in fetch pokemon');
-        });
-      }
+    dispatch(fetchingPokemon(true));
+    if (getState().pokemons.fetchingPokemonList) {
+      fetchPokemonsPromise.then(() => selectPokemon(dispatch, getState, pokemonId));
+    } else {
+      selectPokemon(dispatch, getState, pokemonId);
     }
   };
+}
+
+/**
+ * Action for change the selected pokemon for the user
+ * @param dispatch
+ * @param getState
+ * @param pokemonId
+ */
+function selectPokemon(dispatch, getState, pokemonId) {
+  const state = getState();
+  const {list} = state.pokemons;
+  const pokemon = list.get(Number(pokemonId));
+  if (pokemon) {
+    if (pokemon.data) {
+      dispatch(changeCurrentPokemon(pokemon));
+    } else {
+      dispatch(fetchingPokemon(true));
+      PokemonsResource.getPokemonData(pokemonId).then(response => {
+        pokemon.data = response;
+        dispatch(changeCurrentPokemon(pokemon));
+        dispatch(fetchingPokemon(false));
+      }).catch(error => {
+        console.log('Error in fetch pokemon');
+      });
+    }
+  }
 }
 
 /**
@@ -72,6 +88,9 @@ function fetchingPokemon(fetching) {
  * @returns {{type: string, fetching: *}}
  */
 function fetchingPokemonList(fetching) {
+  if (fetching) {
+    fetchPokemonsPromise = null;
+  }
   return {type: ACTION_TYPES.FETCH_POKEMONS_LIST, fetching};
 }
 
