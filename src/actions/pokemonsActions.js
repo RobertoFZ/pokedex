@@ -17,7 +17,7 @@ let fetchPokemonsPromise;
  * Action for Get Pokemons List from API
  * @returns {Function}
  */
-export function fetchPokemons() {
+export function fetchPokemons(pokemonId) {
   return function (dispatch, getState) {
     const state = getState();
     const next = state.pokemons.next;
@@ -32,6 +32,7 @@ export function fetchPokemons() {
       const {next, previous, results} = response;
       dispatch(updatePokemonsLis(next, previous, results));
       dispatch(fetchingPokemonList(false));
+      if(pokemonId) dispatch(canSelectPokemon(pokemonId));
     }).catch(error => {
       console.log('Error in fetch pokemons');
       dispatch(fetchError(true, null));
@@ -80,6 +81,8 @@ function selectPokemon(dispatch, getState, pokemonId) {
         dispatch(fetchError(null, true));
       });
     }
+  }else{
+    dispatch(fetchPokemons(pokemonId));
   }
 }
 
