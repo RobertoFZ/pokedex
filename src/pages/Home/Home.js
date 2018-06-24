@@ -25,20 +25,30 @@ function mapDispatchToProps(dispatch, props) {
 @connect(mapStateToProps, mapDispatchToProps)
 class Home extends Component {
   state = {
-    menuWidth: 359,
     screenHeight: window.innerHeight,
+    isMenuOpen: false,
+  };
+
+  handleMenuOpen = () => {
+    const {isMenuOpen} = this.state;
+    const width = window.innerWidth;
+    if (width <= 768) {
+      this.setState({isMenuOpen: !isMenuOpen});
+    } else {
+      this.setState({isMenuOpen: false});
+    }
   };
 
   render() {
-    const {menuWidth, screenHeight} = this.state;
+    const {isMenuOpen, screenHeight} = this.state;
     const {children, fetchingPokemonList, pokemonsList, selectPokemon} = this.props;
     const NO_SELECTED_POKEMON = <h1 className={'select_pokemon'}>Choose a pokemon</h1>;
 
     return (
       <div>
-        <SideMenu width={menuWidth} logo={constants.LOGO} textLogo={constants.TEXT_LOGO} elements={pokemonsList}
-                  onElementClick={selectPokemon} loading={fetchingPokemonList}/>
-        <div className={'main_content'} style={{marginLeft: menuWidth}}>
+        <SideMenu logo={constants.LOGO} textLogo={constants.TEXT_LOGO} elements={pokemonsList}
+                  onElementClick={selectPokemon} loading={fetchingPokemonList} isOpen={isMenuOpen} onMenuOpen={this.handleMenuOpen}/>
+        <div className={'main_content'} onClick={this.handleMenuOpen}>
           {
             children ? children : <VerticalAlignContent height={screenHeight} content={NO_SELECTED_POKEMON}/>
           }

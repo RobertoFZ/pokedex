@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import './styles.scss';
 
 function displayTypes(types) {
-  console.log(types);
   return types.map((entry, index) => {
     return <div key={index} className={'column'}>
       <div className={'pokemon__type'}>

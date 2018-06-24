@@ -2,3 +2,9 @@
   height: 100%;
   padding: 38px 100px;
 }
+
+@media only screen and (max-width: 992px) {
+  .detail__content {
+    padding: 38px 50px;
+  }
+}

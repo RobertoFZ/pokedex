@@ -20,7 +20,6 @@ export function fetchPokemons() {
     };
     dispatch(fetchingPokemonList(true));
     PokemonsResource.listPokemons(params).then(response => {
-      console.log(response);
       const {next, previous, results} = response;
       dispatch(updatePokemonsLis(next, previous, results));
       dispatch(fetchingPokemonList(false));
@@ -47,7 +46,6 @@ export function selectPokemon(pokemonId) {
         dispatch(fetchingPokemon(true));
 
         PokemonsResource.getPokemonData(pokemonId).then(response => {
-          console.log(response, 'response');
           pokemon.data = response;
           dispatch(changeCurrentPokemon(pokemon));
           dispatch(fetchingPokemon(false));

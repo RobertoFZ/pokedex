@@ -25,7 +25,6 @@ export default function pokemonsReducer(state = initialState, action) {
       };
     case ACTION_TYPES.SELECT_POKEMON:
       const {pokemon} = action;
-      console.log(pokemon);
       if (pokemon) {
         state.list.set(pokemon.data.id, pokemon);
         state.currentPokemon = pokemon;

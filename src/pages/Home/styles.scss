@@ -1,5 +1,6 @@
 .main_content{
   min-height: 100%;
+  margin-left: 359px;
 }
 
 .select_pokemon {
@@ -8,4 +9,16 @@
   font-size: 72px;
   text-align: center;
   text-transform: uppercase;
+}
+
+@media only screen and (max-width: 992px) {
+  .main_content {
+    margin-left: 250px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .main_content{
+    margin-left: 0;
+  }
 }
