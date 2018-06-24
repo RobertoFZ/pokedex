@@ -4,13 +4,15 @@ import Loader from '../components/Loader/Loader';
 import {canSelectPokemon} from '../../actions/pokemonsActions';
 import PokemonInfo from './PokemonInfo/PokemonInfo';
 import './styles.scss';
+import ErrorButton from '../components/ErrorButton/ErrorButton';
 
 function mapStateToProps(state, props) {
-  const {currentPokemon, fetchingPokemon, fetchingPokemonList, list} = state.pokemons;
+  const {currentPokemon, detailError, fetchingPokemon, fetchingPokemonList, list} = state.pokemons;
   return {
+    currentPokemon: currentPokemon ? currentPokemon.data && currentPokemon : null,
+    detailError,
     pokemonsList: list,
     fetchingPokemon,
-    currentPokemon: currentPokemon ? currentPokemon.data && currentPokemon : null,
     fetchingPokemonList,
   };
 }
@@ -27,21 +29,28 @@ function mapDispatchToProps(dispatch, props) {
 class PokemonDetail extends Component {
 
   componentDidMount() {
+    this.loadPokemon();
+  }
+
+  handleError = () => {
+    this.loadPokemon();
+  };
+
+  loadPokemon = () => {
     const {pokemonId} = this.props.params;
     this.props.selectCurrentPokemon(pokemonId);
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    console.log(nextProps, nextState);
-    return true;
-  }
+  };
 
   render() {
-    const {currentPokemon, fetchingPokemon, fetchingPokemonList} = this.props;
+    const {currentPokemon, detailError, fetchingPokemon, fetchingPokemonList} = this.props;
+    console.log(currentPokemon);
     return (
       <div className={'detail__content'}>
         {
-          fetchingPokemon || fetchingPokemonList ? <Loader/> : currentPokemon && <div>
+          detailError && <ErrorButton handleError={this.handleError} isWhiteText={false}/>
+        }
+        {
+          fetchingPokemon || (fetchingPokemonList && !currentPokemon) ? <Loader/> : currentPokemon && <div>
             <div className={'row'}>
               <div className={'column'}>
                 <PokemonInfo data={currentPokemon.data}/>

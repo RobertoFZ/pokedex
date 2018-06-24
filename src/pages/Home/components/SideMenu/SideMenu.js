@@ -4,15 +4,22 @@ import {ROUTES} from './../../../../app/routesConstants';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import Loader from '../../../components/Loader/Loader';
+import ReactDOM from 'react-dom';
+import ErrorButton from '../../../components/ErrorButton/ErrorButton';
 
 class SideMenu extends Component {
-
+  DOM = null;
   state = {
     screenWidth: window.innerWidth,
+    menuElementsDOM: null,
   };
 
   componentDidMount() {
     window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize, false);
   }
 
   displayMenuElements = () => {
@@ -29,16 +36,25 @@ class SideMenu extends Component {
   };
 
   handleElementClick = (id) => {
-    this.props.onElementClick(id);
-    this.props.onMenuOpen();
+    const {onElementClick, onMenuOpen} = this.props;
+    if (onElementClick) onElementClick(id);
+    if (onMenuOpen) onMenuOpen();
   };
 
   handleWindowResize = () => {
     this.setState({screenWidth: window.innerWidth});
   };
 
+  handleScroll = () => {
+    const {onScroll} = this.props;
+    const {scrollTop, scrollHeight, clientHeight} = this.DOM;
+    if (scrollTop === (scrollHeight - clientHeight)) {
+      onScroll()
+    }
+  };
+
   render() {
-    const {isOpen, onMenuOpen, logo, loading, menuWidth, textLogo} = this.props;
+    const {error, isOpen, handleError, onMenuOpen, logo, loading, menuWidth, textLogo} = this.props;
     const {screenWidth} = this.state;
     return (
       <div className={'side_menu_container'}>
@@ -53,9 +69,15 @@ class SideMenu extends Component {
               <img src={logo}/> {textLogo}
             </Link>
           </div>
-          <div className={'side_menu_elements'}>
+          <div className={'side_menu_elements'} onScroll={this.handleScroll} ref={(ref) => this.DOM = ref}>
             {
-              loading ? <Loader/> : this.displayMenuElements()
+              this.displayMenuElements()
+            }
+            {
+              error && <ErrorButton handleError={handleError} isWhiteText={true}/>
+            }
+            {
+              loading && <Loader/>
             }
           </div>
         </div>
@@ -70,9 +92,14 @@ SideMenu.defaultProps = {
 };
 
 SideMenu.propTypes = {
+  error: PropTypes.bool,
+  isOpen: PropTypes.bool,
+  handleError: PropTypes.func,
   loading: PropTypes.bool.isRequired,
-  onElementClick: PropTypes.func,
   logo: PropTypes.string.isRequired,
+  onElementClick: PropTypes.func,
+  onMenuOpen: PropTypes.func,
+  onScroll: PropTypes.func,
   textLogo: PropTypes.string.isRequired,
 };
 

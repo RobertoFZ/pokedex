@@ -1,11 +1,14 @@
 import PokemonsResource from '../api/PokemonsResource';
 
 export const ACTION_TYPES = {
+  FETCH_POKEMON_LIST_ERROR: 'FETCH_POKEMON_LIST_ERROR',
   FETCH_POKEMONS_LIST: 'FETCH_POKEMONS_LIST',
   FETCH_POKEMON: 'FETCH_POKEMON',
+  FETCH_POKEMON_ERROR: 'FETCH_POKEMON',
   LOAD_POKEMONS_LIST: 'LOAD_POKEMONS_LIST',
   SELECT_POKEMON: 'SELECT_POKEMON',
   UPDATE_POKEMON_DATA: 'UPDATE_POKEMON_DATA',
+  UPDATING_POKEMONS_LIST: 'UPDATING_POKEMONS_LIST',
 };
 
 let fetchPokemonsPromise;
@@ -17,16 +20,21 @@ let fetchPokemonsPromise;
 export function fetchPokemons() {
   return function (dispatch, getState) {
     const state = getState();
+    const next = state.pokemons.next;
+
     const params = {
       limit: state.pokemons.pagination.elements,
+      offset: next ? getOffsetFromUrl(next) : null,
     };
     dispatch(fetchingPokemonList(true));
+    dispatch(fetchError(false, null));
     fetchPokemonsPromise = PokemonsResource.listPokemons(params).then(response => {
       const {next, previous, results} = response;
       dispatch(updatePokemonsLis(next, previous, results));
       dispatch(fetchingPokemonList(false));
     }).catch(error => {
       console.log('Error in fetch pokemons');
+      dispatch(fetchError(true, null));
     });
   };
 }
@@ -39,6 +47,7 @@ export function fetchPokemons() {
 export function canSelectPokemon(pokemonId) {
   return function (dispatch, getState) {
     dispatch(fetchingPokemon(true));
+    dispatch(dispatch(fetchError(null, false)));
     if (getState().pokemons.fetchingPokemonList) {
       fetchPokemonsPromise.then(() => selectPokemon(dispatch, getState, pokemonId));
     } else {
@@ -68,9 +77,23 @@ function selectPokemon(dispatch, getState, pokemonId) {
         dispatch(fetchingPokemon(false));
       }).catch(error => {
         console.log('Error in fetch pokemon');
+        dispatch(fetchError(null, true));
       });
     }
   }
+}
+
+/**
+ *
+ * @param pokemonListError
+ * @param pokemonDetailError
+ * @returns {{type: string, error: *}}
+ */
+function fetchError(pokemonListError, pokemonDetailError) {
+  return {
+    type: pokemonListError ? ACTION_TYPES.FETCH_POKEMON_LIST_ERROR : ACTION_TYPES.FETCH_POKEMON_ERROR,
+    error: pokemonListError ? pokemonListError : pokemonDetailError,
+  };
 }
 
 /**
@@ -113,4 +136,9 @@ function changeCurrentPokemon(pokemon, list) {
  */
 function updatePokemonsLis(next, previous, pokemons) {
   return {type: ACTION_TYPES.LOAD_POKEMONS_LIST, pokemons, next, previous};
+}
+
+function getOffsetFromUrl(url) {
+  const regex = /https:\/\/pokeapi\.co\/api\/v2\/pokemon\/\?limit=150&offset=(.+?)$/;
+  return Number(url.match(regex)[1]);
 }

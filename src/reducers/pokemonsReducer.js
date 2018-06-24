@@ -6,10 +6,13 @@ const initialState = {
   fetchingPokemon: false,
   fetchingPokemonList: true,
   pagination: {
-    elements: 20,
+    elements: 150,
     next: null,
     previous: null,
-  }
+  },
+  updatingPokemonList: false,
+  listError: false,
+  detailError: false,
 };
 
 export default function pokemonsReducer(state = initialState, action) {
@@ -39,6 +42,21 @@ export default function pokemonsReducer(state = initialState, action) {
       };
     case ACTION_TYPES.FETCH_POKEMONS_LIST:
       state.fetchingPokemonList = action.fetching;
+      return {
+        ...state,
+      };
+    case ACTION_TYPES.UPDATING_POKEMONS_LIST:
+      state.updatingPokemonList = action.updating;
+      return {
+        ...state,
+      };
+    case ACTION_TYPES.FETCH_POKEMON_LIST_ERROR:
+      state.listError = action.error;
+      return {
+        ...state,
+      };
+    case ACTION_TYPES.FETCH_POKEMON_ERROR:
+      state.detailError = action.error;
       return {
         ...state,
       };
