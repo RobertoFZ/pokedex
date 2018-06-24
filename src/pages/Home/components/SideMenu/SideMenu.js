@@ -23,7 +23,7 @@ class SideMenu extends Component {
   render() {
     const {logo, loading, textLogo, width} = this.props;
     return (
-      <div className="side_menu" style={{width}}>
+      <div className={'side_menu'}>
         <div className={'side_menu__app_logo'}>
           <Link to={ROUTES.home}>
             <img src={logo}/> {textLogo}

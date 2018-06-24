@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Loader from '../components/Loader/Loader';
 import {selectPokemon} from '../../actions/pokemonsActions';
+import PokemonInfo from './PokemonInfo/PokemonInfo';
+import './styles.scss';
 
 function mapStateToProps(state, props) {
   const {currentPokemon, fetchingPokemon, list} = state.pokemons;
@@ -34,7 +36,14 @@ class PokemonDetail extends Component {
       <div className={'detail__content'}>
         {
           fetchingPokemon ? <Loader/> : currentPokemon && <div>
-            {currentPokemon.name} {currentPokemon.data.weight}
+            <div className={'row'}>
+              <div className={'column'}>
+                <PokemonInfo data={currentPokemon.data}/>
+              </div>
+              <div className={'column'}>
+                <p>Otro detalle</p>
+              </div>
+            </div>
           </div>
         }
       </div>
