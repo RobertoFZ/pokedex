@@ -2,9 +2,11 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Loader from '../components/Loader/Loader';
 import {canSelectPokemon} from '../../actions/pokemonsActions';
-import PokemonInfo from './PokemonInfo/PokemonInfo';
+import PokemonInfo from './components/PokemonInfo/PokemonInfo';
 import './styles.scss';
 import ErrorButton from '../components/ErrorButton/ErrorButton';
+import PokemonAbilities from './components/PokemonAbilities/PokemonAbilities';
+import PokemonMoves from './components/PokemonMoves/PokemonMoves';
 
 function mapStateToProps(state, props) {
   const {currentPokemon, detailError, fetchingPokemon, fetchingPokemonList, list} = state.pokemons;
@@ -56,7 +58,8 @@ class PokemonDetail extends Component {
                 <PokemonInfo data={currentPokemon.data}/>
               </div>
               <div className={'column'}>
-                <p>Some details</p>
+                <PokemonAbilities abilities={currentPokemon.data.abilities}/>
+                <PokemonMoves moves={currentPokemon.data.moves}/>
               </div>
             </div>
           </div>

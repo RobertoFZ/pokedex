@@ -23,11 +23,11 @@ class SideMenu extends Component {
   }
 
   displayMenuElements = () => {
-    const {elements} = this.props;
+    const {elements, selectedElement} = this.props;
     return Array.from(elements).map((element) => {
       const id = element[0];
       const data = element[1];
-      return <Link key={id} className={'element'} to={ROUTES.pokemonDetail.replace(':pokemonId', id)}
+      return <Link key={id} className={`element ${id === selectedElement && 'selected'}`} to={ROUTES.pokemonDetail.replace(':pokemonId', id)}
                    onClick={() => this.handleElementClick(id)}>
         <span className={'element__id'}>{id}</span>
         <span className={'element__name'}>{data.name}</span>
@@ -101,6 +101,7 @@ SideMenu.propTypes = {
   onMenuOpen: PropTypes.func,
   onScroll: PropTypes.func,
   textLogo: PropTypes.string.isRequired,
+  selectedElement: PropTypes.number,
 };
 
 

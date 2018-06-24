@@ -1,0 +1,13 @@
+.moves__container {
+  font-weight: 300;
+}
+
+.moves__list {
+  max-height: 300px;
+  overflow-y: scroll;
+  margin: 10px 0;
+}
+
+.moves__list li {
+  padding: 5px 0;
+}

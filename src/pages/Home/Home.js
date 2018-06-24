@@ -7,11 +7,12 @@ import VerticalAlignContent from '../components/VeticalAlignContent/VerticalAlig
 import {canSelectPokemon, fetchPokemons} from '../../actions/pokemonsActions';
 
 function mapStateToProps(state, props) {
-  const {fetchingPokemonList, list, listError} = state.pokemons;
+  const {currentPokemon, fetchingPokemonList, list, listError} = state.pokemons;
   return {
-    pokemonsList: list,
+    currentPokemon,
     fetchingPokemonList,
     listError,
+    pokemonsList: list,
   };
 }
 
@@ -53,14 +54,15 @@ class Home extends Component {
 
   render() {
     const {isMenuOpen, screenHeight} = this.state;
-    const {children, fetchingPokemonList, pokemonsList, selectPokemon, listError} = this.props;
+    const {children, currentPokemon, fetchingPokemonList, pokemonsList, selectPokemon, listError} = this.props;
     const NO_SELECTED_POKEMON = <h1 className={'select_pokemon'}>Choose a pokemon</h1>;
 
     return (
       <div>
         <SideMenu logo={constants.LOGO} textLogo={constants.TEXT_LOGO} elements={pokemonsList}
                   onElementClick={selectPokemon} loading={fetchingPokemonList} isOpen={isMenuOpen} error={listError}
-                  onMenuOpen={this.handleMenuOpen} onScroll={this.handleMenuScroll} handleError={this.handleError}/>
+                  onMenuOpen={this.handleMenuOpen} onScroll={this.handleMenuScroll} handleError={this.handleError}
+                  selectedElement={currentPokemon ? currentPokemon.data.id : null}/>
         <div className={'main_content'} onClick={this.handleMenuOpen}>
           {
             children ? children : <VerticalAlignContent height={screenHeight} content={NO_SELECTED_POKEMON}/>

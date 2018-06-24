@@ -40,7 +40,7 @@ $menu_element_selected_color: #3F3939;
 }
 
 .element.selected {
-  color: $menu_element_selected_color;
+  background-color: $menu_element_selected_color;
 }
 
 .element__id, .element__name {
