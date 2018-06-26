@@ -1,6 +1,7 @@
 import {ACTION_TYPES} from './../actions/pokemonsActions';
 
 const initialState = {
+  count: 0,
   currentPokemon: null,
   list: new Map(),
   fetchingPokemon: false,
@@ -19,7 +20,8 @@ export default function pokemonsReducer(state = initialState, action) {
   const {list} = state;
   switch (action.type) {
     case ACTION_TYPES.LOAD_POKEMONS_LIST:
-      const {next, previous, pokemons} = action;
+      const {next, previous, pokemons, count} = action;
+      state.count = count;
       state.next = next;
       state.previous = previous;
       state.list = updatePokemonsList(pokemons, list);
@@ -42,11 +44,6 @@ export default function pokemonsReducer(state = initialState, action) {
       };
     case ACTION_TYPES.FETCH_POKEMONS_LIST:
       state.fetchingPokemonList = action.fetching;
-      return {
-        ...state,
-      };
-    case ACTION_TYPES.UPDATING_POKEMONS_LIST:
-      state.updatingPokemonList = action.updating;
       return {
         ...state,
       };
